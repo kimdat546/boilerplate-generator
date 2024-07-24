@@ -2,7 +2,7 @@
 
 Hypercoding Generator is a CLI tool to generate boilerplate templates for projects. It helps automate the setup of new projects with predefined configurations and structures, making it easier to start new projects quickly.
 
-![Open Source](https://badges.frapsoft.com/os/v1/open-source.svg?v=103) ![Stars](https://img.shields.io/github/stars/AkashRajpurohit/boilerplate-gen) ![Visited](https://visitor-badge.laobi.icu/badge?page_id=boilerplate-gen-akash.visitor-badge)
+![Open Source](https://badges.frapsoft.com/os/v1/open-source.svg?v=103) ![Stars](https://img.shields.io/github/stars/kimdat546/boilerplate-generator)
 
 ## Features
 
