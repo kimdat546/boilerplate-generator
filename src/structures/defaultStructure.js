@@ -2406,7 +2406,7 @@ export default ProductLazyLoad;
         },
         router: {
             "index.tsx": `import { APP_URL } from '@/configs/app-url.config';
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import PrivateRoute from './PrivateRoute';
 
 // Layouts
@@ -2426,7 +2426,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <LoginPageLazyLoad />,
+        element: <Navigate to={${"`/${APP_URL.LOGIN}`"}} />,
       },
       {
         path: ${"`/${APP_URL.LOGIN}`"},

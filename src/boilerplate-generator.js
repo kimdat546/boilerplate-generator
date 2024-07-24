@@ -1,9 +1,56 @@
+#!/usr/bin/env node
+
 const { execSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
-const structure = require("./structures/defaultStructure.js");
+const { input, select, Separator } = require("@inquirer/prompts");
 
-const createProject = () => {
+const prompt = async () => {
+    const projectName = await input({
+        message: "Project name:",
+        validate: function (input) {
+            if (/^([A-Za-z\-\_\d\.])+$/.test(input)) return true;
+            else
+                return "Project name may only include letters, numbers, underscores and hashes.";
+        },
+        default: "my-vite-project",
+    });
+    const projectStyle = await select({
+        message: "Select a package manager",
+        choices: [
+            {
+                name: "React-Shadcn UI",
+                value: "defaultStructure.js",
+                description: "React, Vite, Shadcn UI, Tailwind CSS, TypeScript",
+            },
+            {
+                name: "Coming soon",
+                value: "comingSoon",
+                description: "Coming soon",
+            },
+            new Separator(),
+        ],
+        default: "defaultStructure",
+    });
+
+    if (projectStyle === "comingSoon") {
+        console.log("Coming soon, thank you for your patience!");
+        return;
+    }
+
+    const structurePath = `${__dirname}/structures/${projectStyle}`;
+
+    generateProject(projectName, require(structurePath));
+
+    console.log(`🥳 generate project into ${projectName} 💻`);
+};
+
+prompt().catch((error) => {
+    console.error("An unexpected error occurred:", error.message);
+    process.exit(1);
+});
+
+const createProject = (name) => {
     // Function to generate a random 4-character string
     const generateRandomString = () => {
         return Math.random().toString(36).substring(2, 6);
@@ -18,7 +65,7 @@ const createProject = () => {
     };
 
     // Get the project name from command line arguments or default to 'my-vite-project'
-    let projectName = process.argv[2] || "my-vite-project";
+    let projectName = name;
 
     // If the project directory already exists, generate a new name with a 4-character suffix
     while (directoryExists(path.join(process.cwd(), projectName))) {
@@ -26,7 +73,7 @@ const createProject = () => {
     }
 
     // Create Vite project using Yarn with React and TypeScript template
-    runCommand(`yarn create vite ${projectName} --template react-swc-ts`);
+    runCommand(`npm create vite@latest ${projectName} -- --template react-swc-ts`);
 
     // Navigate into the project directory
     process.chdir(projectName);
@@ -239,9 +286,9 @@ const updateContentFile = () => {
 };
 
 // Main function to create the Vite project and perform necessary setup
-const generateProject = () => {
+const generateProject = (projectName, structure) => {
     try {
-        createProject();
+        createProject(projectName);
 
         editTsConfig("tsconfig.node.json");
         editTsConfig("tsconfig.app.json");
@@ -272,5 +319,3 @@ const generateProject = () => {
         process.exit(1);
     }
 };
-
-generateProject();
